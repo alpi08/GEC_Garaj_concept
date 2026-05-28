@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEÇ Garaş | Kurumsal Oto Garaj</title>
+    <title>GEÇ Garaj | Kurumsal Oto Garaj</title>
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Google Fonts: Sinematik ve geniş font -->
@@ -85,32 +85,30 @@
             }
         }
 
-        /* SVG Progress Bar */
+        /* İLERLEME ÇUBUĞU - YENİDEN TASARLANDI */
         #progress-bar-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 4px;
-            z-index: 9999;
+            height: 3px;
+            z-index: 10001;
             pointer-events: none;
+            background: transparent;
         }
-        #progress-bar-container svg {
-            width: 100%;
-            height: 4px;
-        }
-        #progress-bar-container svg line {
-            stroke: var(--sari-neon);
-            stroke-width: 4;
-            stroke-dasharray: 100%;
-            stroke-dashoffset: 100%;
-            filter: drop-shadow(0 0 8px var(--sari-neon));
+        #progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #FFD700, #FFFF00, #FFA500);
+            box-shadow: 0 0 12px #FFD700, 0 0 25px #FFA500;
+            transition: width 0.1s linear;
+            border-radius: 0 2px 2px 0;
         }
 
         /* Header */
         header {
             position: fixed;
-            top: 0;
+            top: 3px;
             left: 0;
             width: 100%;
             padding: 15px 40px;
@@ -945,14 +943,14 @@
         <div class="preloader-ring"></div>
     </div>
 
-    <!-- SVG Progress Bar -->
+    <!-- YENİ İLERLEME ÇUBUĞU -->
     <div id="progress-bar-container">
-        <svg><line x1="0" y1="2" x2="100%" y2="2" /></svg>
+        <div id="progress-fill"></div>
     </div>
 
     <!-- Header -->
     <header id="header">
-        <div class="logo">GEÇ<span>garaş</span></div>
+        <div class="logo">GEÇ<span>garaj</span></div>
         <nav>
             <ul id="nav-links">
                 <li><a href="#hero">Ana Sayfa</a></li>
@@ -981,7 +979,7 @@
         <canvas id="atom-canvas"></canvas>
         <div class="hero-content">
             <div class="premium-badge"><i class="fas fa-star"></i> Kurumsal Çözüm Ortağı</div>
-            <h1>GEÇ <span>GARAŞ</span></h1>
+            <h1>GEÇ <span>GARAJ</span></h1>
             <p>Profesyonel oto bakım & onarımda yeni nesil deneyim. Aracınız emin ellerde.</p>
             <a href="#contact" class="cta-button">Randevu Al</a>
         </div>
@@ -993,11 +991,11 @@
         <p class="section-subtitle">20 yıllık tecrübe, sıfır hata misyonu</p>
         <div class="about-content">
             <div class="about-text">
-                <p>GEÇ Garaş, otomotiv sektöründe güven ve kalitenin adresi olarak 2004 yılından beri hizmet vermektedir. Kurumsal altyapımız, uzman ekibimiz ve son teknoloji ekipmanlarımızla aracınıza değer katıyoruz.</p>
+                <p>GEÇ Garaj, otomotiv sektöründe güven ve kalitenin adresi olarak 2004 yılından beri hizmet vermektedir. Kurumsal altyapımız, uzman ekibimiz ve son teknoloji ekipmanlarımızla aracınıza değer katıyoruz.</p>
                 <p>Müşteri memnuniyetini esas alan çalışma prensibimizle, periyodik bakımdan kaporta onarımına, elektronik arıza tespitinden performans yükseltmeye kadar geniş bir yelpazede hizmet sunuyoruz.</p>
             </div>
             <div class="about-image">
-                <img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&q=80" alt="GEÇ Garaş iç mekan">
+                <img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&q=80" alt="GEÇ Garaj iç mekan">
             </div>
         </div>
     </section>
@@ -1058,7 +1056,7 @@
     <section id="sss">
         <h2 class="section-title">Sıkça Sorulan Sorular</h2>
         <div class="accordion">
-            <div class="accordion-item"><div class="accordion-header">Garanti veriyor musunuz? <i class="fas fa-chevron-down"></i></div><div class="accordion-body"><p>Garantisi Biziz ;)</p></div></div>
+            <div class="accordion-item"><div class="accordion-header">Garanti veriyor musunuz? <i class="fas fa-chevron-down"></i></div><div class="accordion-body"><p>Tüm işçilik ve yedek parçalarımız 2 yıl garantilidir.</p></div></div>
             <div class="accordion-item"><div class="accordion-header">Randevusuz kabul var mı? <i class="fas fa-chevron-down"></i></div><div class="accordion-body"><p>Öncelik randevulu müşterilerdedir; ancak acil durumlarda sığdırmaya çalışırız.</p></div></div>
             <div class="accordion-item"><div class="accordion-header">Hangi araç markalarına bakıyorsunuz? <i class="fas fa-chevron-down"></i></div><div class="accordion-body"><p>Yerli ve yabancı tüm binek ve hafif ticari araçlara servis vermekteyiz.</p></div></div>
         </div>
@@ -1112,7 +1110,7 @@
                 <div class="quick-links">
                     <a href="https://wa.me/905001234567" class="quick-link" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
                     <a href="tel:+905001234567" class="quick-link"><i class="fas fa-phone-alt"></i> Tıkla Ara</a>
-                    <a href="https://t.me/gecgaras" class="quick-link"><i class="fab fa-telegram-plane"></i> Telegram</a>
+                    <a href="https://t.me/gecgaraj" class="quick-link"><i class="fab fa-telegram-plane"></i> Telegram</a>
                 </div>
             </div>
         </div>
@@ -1126,7 +1124,7 @@
             <a href="#"><i class="fab fa-twitter"></i></a>
             <a href="#"><i class="fab fa-youtube"></i></a>
         </div>
-        <p style="color:#666;">&copy; 2025 GEÇ Garaş. Tüm hakları saklıdır. | Kurumsal Paket v5.0</p>
+        <p style="color:#666;">&copy; 2025 GEÇ Garaj. Tüm hakları saklıdır. | Kurumsal Paket v5.0</p>
     </footer>
 
     <!-- Floating Action Button -->
@@ -1134,7 +1132,7 @@
         <div class="fab-sub">
             <a href="https://wa.me/905001234567" target="_blank"><i class="fab fa-whatsapp"></i></a>
             <a href="tel:+905001234567"><i class="fas fa-phone-alt"></i></a>
-            <a href="https://t.me/gecgaras"><i class="fab fa-telegram-plane"></i></a>
+            <a href="https://t.me/gecgaraj"><i class="fab fa-telegram-plane"></i></a>
         </div>
         <div id="fab-main"><i class="fas fa-comment-dots"></i></div>
     </div>
@@ -1155,14 +1153,19 @@
                 updateProgressBar();
             });
 
-            // Progress bar
+            // Progress bar - DÜZGÜN ÇALIŞAN VERSİYON
             function updateProgressBar() {
                 const scrollTop = window.scrollY;
                 const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-                const scrollPercent = (scrollTop / docHeight) * 100;
-                const line = document.querySelector('#progress-bar-container svg line');
-                line.style.strokeDashoffset = 100 - scrollPercent;
+                let scrollPercent = 0;
+                if (docHeight > 0) {
+                    scrollPercent = (scrollTop / docHeight) * 100;
+                }
+                // Başlangıçta %0, sayfa sonunda %100
+                document.getElementById('progress-fill').style.width = scrollPercent + '%';
             }
+            // Sayfa yüklendiğinde hemen çağır
+            updateProgressBar();
 
             // Mobile menu toggle
             const menuToggle = document.getElementById('menu-toggle');
@@ -1301,14 +1304,13 @@
             });
 
             // Leaflet Map (Canlı Harita)
-            const map = L.map('map').setView([41.0082, 28.9784], 15); // İstanbul örnek
+            const map = L.map('map').setView([41.0082, 28.9784], 15);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap contributors',
                 maxZoom: 19
             }).addTo(map);
             L.marker([41.0082, 28.9784]).addTo(map)
-                .bindPopup('<b>GEÇ Garaş</b><br>Sanayi Mah. Motor Cad. No:12').openPopup();
-            // Harita container görünür olduğunda size'ı düzelt
+                .bindPopup('<b>GEÇ Garaj</b><br>Sanayi Mah. Motor Cad. No:12').openPopup();
             setTimeout(() => { map.invalidateSize(); }, 500);
             window.addEventListener('scroll', () => {
                 const mapSection = document.getElementById('map-section');
