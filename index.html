@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEÇ Garaş | Kurumsal Oto Garaj</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts: Sinematik ve geniş font -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS (Canlı Harita) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --sari: #FFD700;
+            --sari-neon: #FFFF00;
+            --sari-koyu: #F5C400;
+            --koyu: #0a0a0a;
+            --koyu2: #111111;
+            --gri: #1a1a1a;
+            --acik-gri: #cccccc;
+            --font-mont: 'Montserrat', sans-serif;
+            --font-poppins: 'Poppins', sans-serif;
+            --neon-glow: 0 0 15px rgba(255, 215, 0, 0.8);
+            --neon-glow-strong: 0 0 30px rgba(255, 255, 0, 0.9);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-poppins);
+            background-color: var(--koyu);
+            color: #ffffff;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--sari);
+            border-radius: 3px;
+            box-shadow: var(--neon-glow);
+        }
+
+        /* Preloader */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        #preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .preloader-ring {
+            width: 80px;
+            height: 80px;
+            border: 4px solid transparent;
+            border-top: 4px solid var(--sari-neon);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 25px var(--sari-neon);
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* SVG Progress Bar */
+        #progress-bar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        #progress-bar-container svg {
+            width: 100%;
+            height: 4px;
+        }
+        #progress-bar-container svg line {
+            stroke: var(--sari-neon);
+            stroke-width: 4;
+            stroke-dasharray: 100%;
+            stroke-dashoffset: 100%;
+            filter: drop-shadow(0 0 8px var(--sari-neon));
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 999;
+            transition: background 0.4s ease, backdrop-filter 0.4s ease, box-shadow 0.4s ease;
+            background: transparent;
+            backdrop-filter: blur(0px);
+        }
+        header.scrolled {
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.7);
+        }
+        .logo {
+            font-family: var(--font-mont);
+            font-weight: 900;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            color: var(--sari-neon);
+            text-shadow: var(--neon-glow);
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: text-shadow 0.3s;
+        }
+        .logo span {
+            font-weight: 400;
+            font-size: 1.2rem;
+            color: #fff;
+            text-shadow: none;
+            margin-left: 5px;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        nav ul li a {
+            color: #ddd;
+            text-decoration: none;
+            font-weight: 500;
+            letter-spacing: 1px;
+            position: relative;
+            padding: 5px 0;
+            transition: color 0.3s;
+        }
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--sari-neon);
+            transition: width 0.3s ease;
+            box-shadow: var(--neon-glow);
+        }
+        nav ul li a:hover {
+            color: var(--sari-neon);
+            text-shadow: 0 0 5px var(--sari);
+        }
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 6px;
+        }
+        .menu-toggle span {
+            width: 30px;
+            height: 3px;
+            background: var(--sari-neon);
+            transition: 0.3s;
+            box-shadow: var(--neon-glow);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+        }
+        .hero-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 2s ease, transform 6s ease;
+            transform: scale(1.1);
+        }
+        .hero-slide.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .hero-slide:nth-child(1) {
+            background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1920&q=80');
+        }
+        .hero-slide:nth-child(2) {
+            background-image: url('https://images.unsplash.com/photo-1530046339160-ce3e530c7d2f?w=1920&q=80');
+        }
+        .hero-slide:nth-child(3) {
+            background-image: url('https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=1920&q=80');
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.85) 100%);
+            z-index: 1;
+        }
+        /* Canvas Atom */
+        #atom-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            padding: 20px;
+        }
+        .premium-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            font-weight: 700;
+            letter-spacing: 3px;
+            padding: 8px 25px;
+            border-radius: 50px;
+            margin-bottom: 25px;
+            animation: pulseBadge 2s infinite;
+            box-shadow: 0 0 25px var(--sari);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+        @keyframes pulseBadge {
+            0%,
+            100% {
+                box-shadow: 0 0 25px var(--sari);
+            }
+            50% {
+                box-shadow: 0 0 50px var(--sari-neon), 0 0 80px var(--sari);
+            }
+        }
+        .hero-content h1 {
+            font-family: var(--font-mont);
+            font-size: 5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            color: #fff;
+            text-shadow: 0 0 30px var(--sari), 0 0 60px var(--sari);
+            margin-bottom: 20px;
+            animation: fadeInUp 1.2s ease;
+        }
+        .hero-content h1 span {
+            color: var(--sari-neon);
+        }
+        .hero-content p {
+            font-size: 1.4rem;
+            color: #ddd;
+            margin-bottom: 40px;
+            animation: fadeInUp 1.2s ease 0.2s both;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cta-button {
+            display: inline-block;
+            padding: 16px 45px;
+            background: var(--sari);
+            color: #000;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px var(--sari);
+            animation: fadeInUp 1.2s ease 0.4s both;
+            font-size: 1rem;
+        }
+        .cta-button:hover {
+            background: #fff;
+            box-shadow: 0 0 40px var(--sari-neon), 0 0 80px var(--sari);
+            transform: translateY(-3px);
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Sections General */
+        section {
+            padding: 100px 40px;
+            position: relative;
+        }
+        .section-title {
+            font-family: var(--font-mont);
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 0 0 15px var(--sari);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--sari);
+            box-shadow: var(--neon-glow);
+        }
+        .section-subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 60px;
+            font-size: 1.1rem;
+        }
+
+        /* About */
+        .about-content {
+            display: flex;
+            gap: 50px;
+            align-items: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        .about-text p {
+            line-height: 1.8;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+            position: relative;
+        }
+        .about-image img {
+            width: 100%;
+            display: block;
+            transition: transform 0.5s;
+        }
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Services */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .service-card {
+            background: var(--gri);
+            border-radius: 15px;
+            padding: 40px 25px;
+            text-align: center;
+            transition: all 0.4s ease;
+            border: 1px solid #333;
+            position: relative;
+            overflow: hidden;
+        }
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .service-card:hover::before {
+            opacity: 1;
+        }
+        .service-card:hover {
+            transform: translateY(-15px);
+            border-color: var(--sari);
+            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.3);
+        }
+        .service-icon {
+            font-size: 3rem;
+            color: var(--sari);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        .service-card:hover .service-icon {
+            transform: scale(1.2) rotate(5deg);
+            text-shadow: var(--neon-glow);
+        }
+        .service-card h3 {
+            font-family: var(--font-mont);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        /* Gallery */
+        .gallery-filter {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 10px 25px;
+            background: transparent;
+            border: 2px solid var(--sari);
+            color: var(--sari);
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+        }
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--sari);
+            color: #000;
+            box-shadow: var(--neon-glow);
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .gallery-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            height: 250px;
+            transition: all 0.4s;
+            border: 2px solid transparent;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        .gallery-item:hover {
+            border-color: var(--sari);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+        .gallery-item .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: #fff;
+            font-weight: 600;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+        .gallery-item:hover .overlay {
+            transform: translateY(0);
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 10001;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .lightbox img {
+            max-width: 90%;
+            max-height: 80vh;
+            border-radius: 10px;
+            box-shadow: 0 0 60px var(--sari);
+        }
+        .lightbox .close {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            font-size: 2.5rem;
+            color: #fff;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        /* Price Table */
+        .price-table {
+            max-width: 900px;
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--gri);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+        th,
+        td {
+            padding: 18px 25px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+        th {
+            background: var(--sari);
+            color: #000;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        tr:hover td {
+            background: #222;
+        }
+
+        /* SSS */
+        .accordion {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .accordion-item {
+            background: var(--gri);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+        .accordion-header {
+            padding: 20px 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .accordion-header:hover {
+            background: #222;
+        }
+        .accordion-header i {
+            transition: transform 0.3s;
+            color: var(--sari);
+        }
+        .accordion-item.active .accordion-header i {
+            transform: rotate(180deg);
+        }
+        .accordion-body {
+            padding: 0 30px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            color: #ccc;
+        }
+        .accordion-item.active .accordion-body {
+            padding: 20px 30px;
+            max-height: 200px;
+        }
+
+        /* Team */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .team-card {
+            background: var(--gri);
+            border-radius: 15px;
+            overflow: hidden;
+            text-align: center;
+            transition: all 0.4s;
+            border: 1px solid #333;
+        }
+        .team-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--sari);
+            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.3);
+        }
+        .team-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        .team-card h4 {
+            margin: 20px 0 5px;
+            font-family: var(--font-mont);
+        }
+        .team-card p {
+            color: var(--sari);
+            margin-bottom: 20px;
+        }
+
+        /* API Section */
+        .api-section {
+            background: #000;
+            border-top: 2px solid var(--sari);
+            border-bottom: 2px solid var(--sari);
+            text-align: center;
+            padding: 80px 40px;
+        }
+        .api-status {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+        .api-card {
+            background: var(--gri);
+            padding: 30px;
+            border-radius: 15px;
+            width: 250px;
+            border: 1px solid #333;
+            transition: 0.3s;
+        }
+        .api-card i {
+            font-size: 2.5rem;
+            color: var(--sari);
+            margin-bottom: 15px;
+        }
+        .api-card .pulse-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #0f0;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulseDot 1.5s infinite;
+            box-shadow: 0 0 10px #0f0;
+        }
+        @keyframes pulseDot {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        /* Map */
+        #map {
+            height: 450px;
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            z-index: 1;
+        }
+        .map-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        /* Contact */
+        .contact-wrapper {
+            display: flex;
+            gap: 50px;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .contact-form {
+            flex: 1;
+            min-width: 300px;
+        }
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: var(--gri);
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #fff;
+            font-family: var(--font-poppins);
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--sari);
+            box-shadow: 0 0 15px var(--sari);
+        }
+        .contact-form button {
+            padding: 15px 40px;
+            background: var(--sari);
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+        }
+        .contact-form button:hover {
+            box-shadow: 0 0 30px var(--sari);
+            background: #fff;
+        }
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        .quick-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        .quick-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: var(--gri);
+            border-radius: 50px;
+            color: #fff;
+            text-decoration: none;
+            transition: 0.3s;
+            border: 1px solid #333;
+        }
+        .quick-link i {
+            color: var(--sari);
+            font-size: 1.3rem;
+        }
+        .quick-link:hover {
+            border-color: var(--sari);
+            box-shadow: var(--neon-glow);
+        }
+
+        /* Footer */
+        footer {
+            background: #000;
+            padding: 40px;
+            text-align: center;
+            border-top: 1px solid #222;
+        }
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+        .social-icons a {
+            color: #fff;
+            font-size: 1.5rem;
+            transition: 0.3s;
+        }
+        .social-icons a:hover {
+            color: var(--sari);
+            text-shadow: var(--neon-glow);
+            transform: translateY(-5px);
+        }
+
+        /* Floating Action Button */
+        .fab-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 15px;
+        }
+        .fab-sub {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .fab-container.active .fab-sub {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .fab-sub a {
+            width: 50px;
+            height: 50px;
+            background: var(--gri);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--sari);
+            font-size: 1.3rem;
+            text-decoration: none;
+            border: 1px solid #444;
+            transition: 0.3s;
+        }
+        .fab-sub a:hover {
+            background: var(--sari);
+            color: #000;
+            box-shadow: 0 0 20px var(--sari);
+        }
+        #fab-main {
+            width: 60px;
+            height: 60px;
+            background: var(--sari);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #000;
+            border: none;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 25px var(--sari);
+            transform: rotate(0deg);
+        }
+        #fab-main i {
+            transition: transform 0.4s;
+        }
+        .fab-container.active #fab-main {
+            transform: rotate(135deg);
+            background: #fff;
+            box-shadow: 0 0 35px var(--sari-neon);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+            nav ul {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background: rgba(0,0,0,0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 40px;
+                transition: right 0.4s ease;
+                z-index: 998;
+            }
+            nav ul.active {
+                right: 0;
+            }
+            .menu-toggle {
+                display: flex;
+                z-index: 999;
+            }
+            .hero-content h1 {
+                font-size: 2.8rem;
+                letter-spacing: 2px;
+            }
+            section {
+                padding: 60px 20px;
+            }
+            .section-title {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="preloader-ring"></div>
+    </div>
+
+    <!-- SVG Progress Bar -->
+    <div id="progress-bar-container">
+        <svg><line x1="0" y1="2" x2="100%" y2="2" /></svg>
+    </div>
+
+    <!-- Header -->
+    <header id="header">
+        <div class="logo">GEÇ<span>garaş</span></div>
+        <nav>
+            <ul id="nav-links">
+                <li><a href="#hero">Ana Sayfa</a></li>
+                <li><a href="#about">Hakkımızda</a></li>
+                <li><a href="#services">Hizmetler</a></li>
+                <li><a href="#gallery">Galeri</a></li>
+                <li><a href="#pricing">Fiyatlar</a></li>
+                <li><a href="#sss">SSS</a></li>
+                <li><a href="#team">Ekip</a></li>
+                <li><a href="#contact">İletişim</a></li>
+            </ul>
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-slider">
+            <div class="hero-slide active"></div>
+            <div class="hero-slide"></div>
+            <div class="hero-slide"></div>
+        </div>
+        <div class="hero-overlay"></div>
+        <canvas id="atom-canvas"></canvas>
+        <div class="hero-content">
+            <div class="premium-badge"><i class="fas fa-star"></i> Kurumsal Çözüm Ortağı</div>
+            <h1>GEÇ <span>GARAŞ</span></h1>
+            <p>Profesyonel oto bakım & onarımda yeni nesil deneyim. Aracınız emin ellerde.</p>
+            <a href="#contact" class="cta-button">Randevu Al</a>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id="about">
+        <h2 class="section-title">Hakkımızda</h2>
+        <p class="section-subtitle">20 yıllık tecrübe, sıfır hata misyonu</p>
+        <div class="about-content">
+            <div class="about-text">
+                <p>GEÇ Garaş, otomotiv sektöründe güven ve kalitenin adresi olarak 2004 yılından beri hizmet vermektedir. Kurumsal altyapımız, uzman ekibimiz ve son teknoloji ekipmanlarımızla aracınıza değer katıyoruz.</p>
+                <p>Müşteri memnuniyetini esas alan çalışma prensibimizle, periyodik bakımdan kaporta onarımına, elektronik arıza tespitinden performans yükseltmeye kadar geniş bir yelpazede hizmet sunuyoruz.</p>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&q=80" alt="GEÇ Garaş iç mekan">
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" style="background: #0d0d0d;">
+        <h2 class="section-title">Hizmetlerimiz</h2>
+        <p class="section-subtitle">Aracınız için ihtiyacınız olan her şey</p>
+        <div class="services-grid">
+            <div class="service-card"><i class="fas fa-cogs service-icon"></i><h3>Motor Tamiri</h3><p>Yerli ve yabancı tüm araçların motor revizyon, onarım ve bakım işlemleri.</p></div>
+            <div class="service-card"><i class="fas fa-car-crash service-icon"></i><h3>Kaporta & Boya</h3><p>Hasarsız onarım, boyasız düzeltme ve profesyonel boya hizmetleri.</p></div>
+            <div class="service-card"><i class="fas fa-bolt service-icon"></i><h3>Elektrik & Elektronik</h3><p>Arıza tespiti, sensör kalibrasyonu, akü ve marş dinamosu servisi.</p></div>
+            <div class="service-card"><i class="fas fa-snowflake service-icon"></i><h3>Klima Servisi</h3><p>Klima gazı dolumu, kompresör kontrolü ve polen filtresi değişimi.</p></div>
+            <div class="service-card"><i class="fas fa-oil-can service-icon"></i><h3>Periyodik Bakım</h3><p>Yağ, filtre, triger seti değişimi ve genel kontrol paketleri.</p></div>
+            <div class="service-card"><i class="fas fa-tachometer-alt service-icon"></i><h3>Performans</h3><p>Yazılım optimizasyonu, egzoz sistemi ve süspansiyon yükseltmeleri.</p></div>
+        </div>
+    </section>
+
+    <!-- Gallery -->
+    <section id="gallery">
+        <h2 class="section-title">Galeri</h2>
+        <p class="section-subtitle">Çalışmalarımızdan kareler</p>
+        <div class="gallery-filter">
+            <button class="filter-btn active" data-filter="all">Tümü</button>
+            <button class="filter-btn" data-filter="motor">Motor</button>
+            <button class="filter-btn" data-filter="boya">Kaporta</button>
+            <button class="filter-btn" data-filter="elektrik">Elektrik</button>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item" data-cat="motor"><img src="https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=600&q=80" alt=""><div class="overlay">Motor Revizyon</div></div>
+            <div class="gallery-item" data-cat="boya"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&q=80" alt=""><div class="overlay">Kaporta Düzeltme</div></div>
+            <div class="gallery-item" data-cat="elektrik"><img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&q=80" alt=""><div class="overlay">Elektronik Test</div></div>
+            <div class="gallery-item" data-cat="motor"><img src="https://images.unsplash.com/photo-1530046339160-ce3e530c7d2f?w=600&q=80" alt=""><div class="overlay">Motor Bakım</div></div>
+            <div class="gallery-item" data-cat="boya"><img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=600&q=80" alt=""><div class="overlay">Boya Tesviye</div></div>
+            <div class="gallery-item" data-cat="elektrik"><img src="https://images.unsplash.com/photo-1566933293069-b55c7f326dd4?w=600&q=80" alt=""><div class="overlay">Sensör Ayarı</div></div>
+        </div>
+    </section>
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox"><span class="close">&times;</span><img src="" alt=""></div>
+
+    <!-- Pricing -->
+    <section id="pricing" style="background: #0d0d0d;">
+        <h2 class="section-title">Fiyat Listesi</h2>
+        <p class="section-subtitle">Şeffaf ve rekabetçi fiyatlandırma</p>
+        <div class="price-table">
+            <table>
+                <tr><th>Hizmet</th><th>Açıklama</th><th>Fiyat</th></tr>
+                <tr><td>Periyodik Bakım</td><td>Yağ, filtre ve kontroller</td><td>₺1.200'den başlar</td></tr>
+                <tr><td>Klima Dolumu</td><td>Gaz + dezenfeksiyon</td><td>₺650</td></tr>
+                <tr><td>Fren Sistemi</td><td>Balata & disk değişimi</td><td>₺1.800</td></tr>
+                <tr><td>Triger Seti</td><td>Kayış + gergi + su pompası</td><td>₺3.500</td></tr>
+                <tr><td>Kaporta & Boya</td><td>Parça başı onarım</td><td>₺2.000'den başlar</td></tr>
+            </table>
+        </div>
+    </section>
+
+    <!-- SSS -->
+    <section id="sss">
+        <h2 class="section-title">Sıkça Sorulan Sorular</h2>
+        <div class="accordion">
+            <div class="accordion-item"><div class="accordion-header">Garanti veriyor musunuz? <i class="fas fa-chevron-down"></i></div><div class="accordion-body"><p>Garantisi Biziz ;)</p></div></div>
+            <div class="accordion-item"><div class="accordion-header">Randevusuz kabul var mı? <i class="fas fa-chevron-down"></i></div><div class="accordion-body"><p>Öncelik randevulu müşterilerdedir; ancak acil durumlarda sığdırmaya çalışırız.</p></div></div>
+            <div class="accordion-item"><div class="accordion-header">Hangi araç markalarına bakıyorsunuz? <i class="fas fa-chevron-down"></i></div><div class="accordion-body"><p>Yerli ve yabancı tüm binek ve hafif ticari araçlara servis vermekteyiz.</p></div></div>
+        </div>
+    </section>
+
+    <!-- Team -->
+    <section id="team" style="background: #0d0d0d;">
+        <h2 class="section-title">Ekibimiz</h2>
+        <div class="team-grid">
+            <div class="team-card"><img src="https://randomuser.me/api/portraits/men/32.jpg" alt=""><h4>Ahmet Yılmaz</h4><p>Usta Motor Teknisyeni</p></div>
+            <div class="team-card"><img src="https://randomuser.me/api/portraits/men/45.jpg" alt=""><h4>Mehmet Demir</h4><p>Kaporta & Boya Uzmanı</p></div>
+            <div class="team-card"><img src="https://randomuser.me/api/portraits/women/44.jpg" alt=""><h4>Ayşe Kaya</h4><p>Elektronik Teknisyeni</p></div>
+            <div class="team-card"><img src="https://randomuser.me/api/portraits/men/22.jpg" alt=""><h4>Can Eren</h4><p>Servis Danışmanı</p></div>
+        </div>
+    </section>
+
+    <!-- API Section (Kurumsal Paket Özel) -->
+    <div class="api-section">
+        <h2 class="section-title" style="left:auto;transform:none;">Gelişmiş API Entegrasyonu</h2>
+        <p style="color:#aaa;">Canlı sistem durumu ve veri akışı simülasyonu</p>
+        <div class="api-status">
+            <div class="api-card"><i class="fas fa-database"></i><h4>ERP Bağlantısı</h4><p><span class="pulse-dot"></span>Aktif (128 sorgu/dk)</p></div>
+            <div class="api-card"><i class="fas fa-cloud"></i><h4>CRM Senkronizasyonu</h4><p><span class="pulse-dot"></span>Canlı</p></div>
+            <div class="api-card"><i class="fas fa-shield-alt"></i><h4>Güvenlik Duvarı</h4><p><span class="pulse-dot"></span>Korunuyor</p></div>
+        </div>
+    </div>
+
+    <!-- Map -->
+    <section id="map-section">
+        <h2 class="section-title">Konum</h2>
+        <div class="map-container"><div id="map"></div></div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" style="background: #0d0d0d;">
+        <h2 class="section-title">İletişim</h2>
+        <div class="contact-wrapper">
+            <div class="contact-form">
+                <form id="contactForm">
+                    <input type="text" placeholder="Adınız Soyadınız" required>
+                    <input type="email" placeholder="E-posta Adresiniz" required>
+                    <input type="tel" placeholder="Telefon Numaranız">
+                    <textarea rows="5" placeholder="Mesajınız..."></textarea>
+                    <button type="submit">Gönder <i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+            <div class="contact-info">
+                <h3 style="color:var(--sari); margin-bottom:20px;">Hızlı İletişim</h3>
+                <p><i class="fas fa-map-marker-alt" style="color:var(--sari); margin-right:10px;"></i> Sanayi Mah. Motor Cad. No:12, İstanbul</p>
+                <p><i class="fas fa-clock" style="color:var(--sari); margin-right:10px;"></i> Pzt-Cmt: 08:30 - 19:00</p>
+                <div class="quick-links">
+                    <a href="https://wa.me/905001234567" class="quick-link" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                    <a href="tel:+905001234567" class="quick-link"><i class="fas fa-phone-alt"></i> Tıkla Ara</a>
+                    <a href="https://t.me/gecgaras" class="quick-link"><i class="fab fa-telegram-plane"></i> Telegram</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+        <p style="color:#666;">&copy; 2025 GEÇ Garaş. Tüm hakları saklıdır. | Kurumsal Paket v5.0</p>
+    </footer>
+
+    <!-- Floating Action Button -->
+    <div class="fab-container" id="fab-container">
+        <div class="fab-sub">
+            <a href="https://wa.me/905001234567" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            <a href="tel:+905001234567"><i class="fas fa-phone-alt"></i></a>
+            <a href="https://t.me/gecgaras"><i class="fab fa-telegram-plane"></i></a>
+        </div>
+        <div id="fab-main"><i class="fas fa-comment-dots"></i></div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Preloader
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('hidden');
+            }, 600);
+
+            // Header scroll effect
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                header.classList.toggle('scrolled', window.scrollY > 50);
+                updateProgressBar();
+            });
+
+            // Progress bar
+            function updateProgressBar() {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = (scrollTop / docHeight) * 100;
+                const line = document.querySelector('#progress-bar-container svg line');
+                line.style.strokeDashoffset = 100 - scrollPercent;
+            }
+
+            // Mobile menu toggle
+            const menuToggle = document.getElementById('menu-toggle');
+            const navLinks = document.getElementById('nav-links');
+            menuToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => navLinks.classList.remove('active'));
+            });
+
+            // Hero slider
+            const slides = document.querySelectorAll('.hero-slide');
+            let currentSlide = 0;
+            setInterval(() => {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }, 5000);
+
+            // Atom canvas animation
+            const canvas = document.getElementById('atom-canvas');
+            const ctx = canvas.getContext('2d');
+            let w, h;
+            function resizeCanvas() {
+                w = canvas.width = canvas.parentElement.offsetWidth;
+                h = canvas.height = canvas.parentElement.offsetHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            let angle1 = 0,
+                angle2 = Math.PI / 3,
+                angle3 = 2 * Math.PI / 3;
+            function drawAtom() {
+                ctx.clearRect(0, 0, w, h);
+                const cx = w / 2,
+                    cy = h / 2;
+                // Çekirdek
+                ctx.beginPath();
+                ctx.arc(cx, cy, 20, 0, Math.PI * 2);
+                const gradient = ctx.createRadialGradient(cx, cy, 5, cx, cy, 20);
+                gradient.addColorStop(0, '#FFFF00');
+                gradient.addColorStop(1, '#FFA500');
+                ctx.fillStyle = gradient;
+                ctx.fill();
+                ctx.shadowColor = '#FFFF00';
+                ctx.shadowBlur = 25;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                // Yörüngeler
+                const orbits = [80, 120, 160];
+                const angles = [angle1, angle2, angle3];
+                const colors = ['#FFD700', '#FFA500', '#FFFF00'];
+                orbits.forEach((r, i) => {
+                    ctx.beginPath();
+                    ctx.ellipse(cx, cy, r, r * 0.4, 0, 0, Math.PI * 2);
+                    ctx.strokeStyle = 'rgba(255,215,0,0.15)';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    const ex = cx + r * Math.cos(angles[i]);
+                    const ey = cy + r * 0.4 * Math.sin(angles[i]);
+                    ctx.beginPath();
+                    ctx.arc(ex, ey, 6, 0, Math.PI * 2);
+                    ctx.fillStyle = colors[i];
+                    ctx.shadowColor = colors[i];
+                    ctx.shadowBlur = 15;
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                });
+                angle1 += 0.02;
+                angle2 += 0.015;
+                angle3 += 0.025;
+                requestAnimationFrame(drawAtom);
+            }
+            drawAtom();
+
+            // Gallery filter
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const filter = btn.dataset.filter;
+                    galleryItems.forEach(item => {
+                        if (filter === 'all' || item.dataset.cat === filter) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            // Lightbox
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = lightbox.querySelector('img');
+            galleryItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const src = item.querySelector('img').src;
+                    lightboxImg.src = src;
+                    lightbox.style.display = 'flex';
+                });
+            });
+            lightbox.querySelector('.close').addEventListener('click', () => {
+                lightbox.style.display = 'none';
+            });
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) lightbox.style.display = 'none';
+            });
+
+            // Accordion
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const item = header.parentElement;
+                    document.querySelectorAll('.accordion-item').forEach(i => {
+                        if (i !== item) i.classList.remove('active');
+                    });
+                    item.classList.toggle('active');
+                });
+            });
+
+            // Form submit
+            document.getElementById('contactForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Mesajınız alındı! En kısa sürede dönüş yapacağız. (Kurumsal API simülasyonu)');
+                e.target.reset();
+            });
+
+            // FAB
+            const fabContainer = document.getElementById('fab-container');
+            const fabMain = document.getElementById('fab-main');
+            fabMain.addEventListener('click', () => {
+                fabContainer.classList.toggle('active');
+            });
+
+            // Leaflet Map (Canlı Harita)
+            const map = L.map('map').setView([41.0082, 28.9784], 15); // İstanbul örnek
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
+            L.marker([41.0082, 28.9784]).addTo(map)
+                .bindPopup('<b>GEÇ Garaş</b><br>Sanayi Mah. Motor Cad. No:12').openPopup();
+            // Harita container görünür olduğunda size'ı düzelt
+            setTimeout(() => { map.invalidateSize(); }, 500);
+            window.addEventListener('scroll', () => {
+                const mapSection = document.getElementById('map-section');
+                const rect = mapSection.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    map.invalidateSize();
+                }
+            });
+
+            // Smooth scroll for nav links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
