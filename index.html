@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GEÇ Garaj | Kurumsal Oto Garaj</title>
-    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Fonts: Sinematik ve geniş font -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Leaflet CSS (Canlı Harita) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         :root {
@@ -39,7 +36,6 @@
             scroll-behavior: smooth;
         }
 
-        /* Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -52,7 +48,6 @@
             box-shadow: var(--neon-glow);
         }
 
-        /* Preloader */
         #preloader {
             position: fixed;
             top: 0;
@@ -85,7 +80,6 @@
             }
         }
 
-        /* İLERLEME ÇUBUĞU - YENİDEN TASARLANDI */
         #progress-bar-container {
             position: fixed;
             top: 0;
@@ -105,7 +99,6 @@
             border-radius: 0 2px 2px 0;
         }
 
-        /* Header */
         header {
             position: fixed;
             top: 3px;
@@ -241,8 +234,9 @@
             background: radial-gradient(circle at center, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.85) 100%);
             z-index: 1;
         }
-        /* Canvas Atom */
-        #atom-canvas {
+
+        /* YENİ GARAJ ANİMASYONU */
+        #garage-canvas {
             position: absolute;
             top: 0;
             left: 0;
@@ -251,6 +245,7 @@
             z-index: 2;
             pointer-events: none;
         }
+
         .hero-content {
             position: relative;
             z-index: 3;
@@ -334,7 +329,6 @@
             }
         }
 
-        /* Sections General */
         section {
             padding: 100px 40px;
             position: relative;
@@ -369,7 +363,6 @@
             font-size: 1.1rem;
         }
 
-        /* About */
         .about-content {
             display: flex;
             gap: 50px;
@@ -404,7 +397,6 @@
             transform: scale(1.05);
         }
 
-        /* Services */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -457,7 +449,6 @@
             font-weight: 600;
         }
 
-        /* Gallery */
         .gallery-filter {
             display: flex;
             justify-content: center;
@@ -527,7 +518,6 @@
             transform: translateY(0);
         }
 
-        /* Lightbox */
         .lightbox {
             position: fixed;
             top: 0;
@@ -557,7 +547,6 @@
             z-index: 2;
         }
 
-        /* Price Table */
         .price-table {
             max-width: 900px;
             margin: 0 auto;
@@ -588,7 +577,6 @@
             background: #222;
         }
 
-        /* SSS */
         .accordion {
             max-width: 800px;
             margin: 0 auto;
@@ -631,7 +619,6 @@
             max-height: 200px;
         }
 
-        /* Team */
         .team-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -666,7 +653,6 @@
             margin-bottom: 20px;
         }
 
-        /* API Section */
         .api-section {
             background: #000;
             border-top: 2px solid var(--sari);
@@ -714,7 +700,6 @@
             }
         }
 
-        /* Map */
         #map {
             height: 450px;
             width: 100%;
@@ -729,7 +714,6 @@
             overflow: hidden;
         }
 
-        /* Contact */
         .contact-wrapper {
             display: flex;
             gap: 50px;
@@ -804,7 +788,6 @@
             box-shadow: var(--neon-glow);
         }
 
-        /* Footer */
         footer {
             background: #000;
             padding: 40px;
@@ -828,7 +811,6 @@
             transform: translateY(-5px);
         }
 
-        /* Floating Action Button */
         .fab-container {
             position: fixed;
             bottom: 30px;
@@ -897,7 +879,6 @@
             box-shadow: 0 0 35px var(--sari-neon);
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             header {
                 padding: 15px 20px;
@@ -938,17 +919,14 @@
     </style>
 </head>
 <body>
-    <!-- Preloader -->
     <div id="preloader">
         <div class="preloader-ring"></div>
     </div>
 
-    <!-- YENİ İLERLEME ÇUBUĞU -->
     <div id="progress-bar-container">
         <div id="progress-fill"></div>
     </div>
 
-    <!-- Header -->
     <header id="header">
         <div class="logo">GEÇ<span>garaj</span></div>
         <nav>
@@ -968,7 +946,6 @@
         </nav>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero" id="hero">
         <div class="hero-slider">
             <div class="hero-slide active"></div>
@@ -976,7 +953,7 @@
             <div class="hero-slide"></div>
         </div>
         <div class="hero-overlay"></div>
-        <canvas id="atom-canvas"></canvas>
+        <canvas id="garage-canvas"></canvas>
         <div class="hero-content">
             <div class="premium-badge"><i class="fas fa-star"></i> Kurumsal Çözüm Ortağı</div>
             <h1>GEÇ <span>GARAJ</span></h1>
@@ -985,7 +962,6 @@
         </div>
     </section>
 
-    <!-- About -->
     <section id="about">
         <h2 class="section-title">Hakkımızda</h2>
         <p class="section-subtitle">20 yıllık tecrübe, sıfır hata misyonu</p>
@@ -1000,7 +976,6 @@
         </div>
     </section>
 
-    <!-- Services -->
     <section id="services" style="background: #0d0d0d;">
         <h2 class="section-title">Hizmetlerimiz</h2>
         <p class="section-subtitle">Aracınız için ihtiyacınız olan her şey</p>
@@ -1014,7 +989,6 @@
         </div>
     </section>
 
-    <!-- Gallery -->
     <section id="gallery">
         <h2 class="section-title">Galeri</h2>
         <p class="section-subtitle">Çalışmalarımızdan kareler</p>
@@ -1033,10 +1007,8 @@
             <div class="gallery-item" data-cat="elektrik"><img src="https://images.unsplash.com/photo-1566933293069-b55c7f326dd4?w=600&q=80" alt=""><div class="overlay">Sensör Ayarı</div></div>
         </div>
     </section>
-    <!-- Lightbox -->
     <div class="lightbox" id="lightbox"><span class="close">&times;</span><img src="" alt=""></div>
 
-    <!-- Pricing -->
     <section id="pricing" style="background: #0d0d0d;">
         <h2 class="section-title">Fiyat Listesi</h2>
         <p class="section-subtitle">Şeffaf ve rekabetçi fiyatlandırma</p>
@@ -1052,7 +1024,6 @@
         </div>
     </section>
 
-    <!-- SSS -->
     <section id="sss">
         <h2 class="section-title">Sıkça Sorulan Sorular</h2>
         <div class="accordion">
@@ -1062,7 +1033,6 @@
         </div>
     </section>
 
-    <!-- Team -->
     <section id="team" style="background: #0d0d0d;">
         <h2 class="section-title">Ekibimiz</h2>
         <div class="team-grid">
@@ -1073,7 +1043,6 @@
         </div>
     </section>
 
-    <!-- API Section (Kurumsal Paket Özel) -->
     <div class="api-section">
         <h2 class="section-title" style="left:auto;transform:none;">Gelişmiş API Entegrasyonu</h2>
         <p style="color:#aaa;">Canlı sistem durumu ve veri akışı simülasyonu</p>
@@ -1084,13 +1053,11 @@
         </div>
     </div>
 
-    <!-- Map -->
     <section id="map-section">
         <h2 class="section-title">Konum</h2>
         <div class="map-container"><div id="map"></div></div>
     </section>
 
-    <!-- Contact -->
     <section id="contact" style="background: #0d0d0d;">
         <h2 class="section-title">İletişim</h2>
         <div class="contact-wrapper">
@@ -1116,7 +1083,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer>
         <div class="social-icons">
             <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -1127,7 +1093,6 @@
         <p style="color:#666;">&copy; 2025 GEÇ Garaj. Tüm hakları saklıdır. | Kurumsal Paket v5.0</p>
     </footer>
 
-    <!-- Floating Action Button -->
     <div class="fab-container" id="fab-container">
         <div class="fab-sub">
             <a href="https://wa.me/905001234567" target="_blank"><i class="fab fa-whatsapp"></i></a>
@@ -1137,23 +1102,19 @@
         <div id="fab-main"><i class="fas fa-comment-dots"></i></div>
     </div>
 
-    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Preloader
             setTimeout(() => {
                 document.getElementById('preloader').classList.add('hidden');
             }, 600);
 
-            // Header scroll effect
             const header = document.getElementById('header');
             window.addEventListener('scroll', () => {
                 header.classList.toggle('scrolled', window.scrollY > 50);
                 updateProgressBar();
             });
 
-            // Progress bar - DÜZGÜN ÇALIŞAN VERSİYON
             function updateProgressBar() {
                 const scrollTop = window.scrollY;
                 const docHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -1161,13 +1122,10 @@
                 if (docHeight > 0) {
                     scrollPercent = (scrollTop / docHeight) * 100;
                 }
-                // Başlangıçta %0, sayfa sonunda %100
                 document.getElementById('progress-fill').style.width = scrollPercent + '%';
             }
-            // Sayfa yüklendiğinde hemen çağır
             updateProgressBar();
 
-            // Mobile menu toggle
             const menuToggle = document.getElementById('menu-toggle');
             const navLinks = document.getElementById('nav-links');
             menuToggle.addEventListener('click', () => {
@@ -1177,7 +1135,6 @@
                 link.addEventListener('click', () => navLinks.classList.remove('active'));
             });
 
-            // Hero slider
             const slides = document.querySelectorAll('.hero-slide');
             let currentSlide = 0;
             setInterval(() => {
@@ -1186,10 +1143,11 @@
                 slides[currentSlide].classList.add('active');
             }, 5000);
 
-            // Atom canvas animation
-            const canvas = document.getElementById('atom-canvas');
+            // ============ GARAJ KONSEPTİNE ÖZEL ANİMASYON ============
+            const canvas = document.getElementById('garage-canvas');
             const ctx = canvas.getContext('2d');
             let w, h;
+
             function resizeCanvas() {
                 w = canvas.width = canvas.parentElement.offsetWidth;
                 h = canvas.height = canvas.parentElement.offsetHeight;
@@ -1197,51 +1155,197 @@
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
 
-            let angle1 = 0,
-                angle2 = Math.PI / 3,
-                angle3 = 2 * Math.PI / 3;
-            function drawAtom() {
-                ctx.clearRect(0, 0, w, h);
-                const cx = w / 2,
-                    cy = h / 2;
-                // Çekirdek
+            // Partikül sistemi - yağ damlacıkları ve kıvılcımlar
+            const particles = [];
+            const particleCount = 120;
+
+            class Particle {
+                constructor() {
+                    this.reset();
+                }
+                reset() {
+                    this.x = Math.random() * w;
+                    this.y = Math.random() * h;
+                    this.size = Math.random() * 4 + 1;
+                    this.speedX = (Math.random() - 0.5) * 0.8;
+                    this.speedY = (Math.random() - 0.5) * 0.8;
+                    this.opacity = Math.random() * 0.6 + 0.2;
+                    this.type = Math.random() > 0.7 ? 'spark' : 'oil';
+                    this.life = Math.random() * 200 + 100;
+                    this.maxLife = this.life;
+                    if (this.type === 'spark') {
+                        this.color = `hsl(${45 + Math.random() * 15}, 100%, ${60 + Math.random() * 40}%)`;
+                    } else {
+                        this.color = `rgba(255, 215, 0, ${this.opacity})`;
+                    }
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    this.life--;
+                    if (this.type === 'oil') {
+                        this.size *= 0.9995;
+                    }
+                    if (this.life <= 0 || this.x < -20 || this.x > w + 20 || this.y < -20 || this.y > h + 20) {
+                        this.reset();
+                        this.x = Math.random() * w;
+                        this.y = Math.random() * h;
+                        this.life = this.maxLife;
+                    }
+                }
+                draw(ctx) {
+                    ctx.save();
+                    ctx.globalAlpha = this.life / this.maxLife;
+                    if (this.type === 'spark') {
+                        ctx.shadowColor = this.color;
+                        ctx.shadowBlur = 8;
+                        ctx.fillStyle = this.color;
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size * 0.8, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                    } else {
+                        ctx.fillStyle = this.color;
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    ctx.restore();
+                }
+            }
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+
+            // Motor çarkı (dişli)
+            let gearAngle = 0;
+            function drawGear(cx, cy, radius, teeth, angle, color) {
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(angle);
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                ctx.shadowColor = color;
+                ctx.shadowBlur = 15;
+                ctx.globalAlpha = 0.5;
+
+                // Dişli gövdesi
                 ctx.beginPath();
-                ctx.arc(cx, cy, 20, 0, Math.PI * 2);
-                const gradient = ctx.createRadialGradient(cx, cy, 5, cx, cy, 20);
+                const outerRadius = radius;
+                const innerRadius = radius * 0.65;
+                const step = Math.PI / teeth;
+
+                for (let i = 0; i < teeth * 2; i++) {
+                    const r = i % 2 === 0 ? outerRadius : innerRadius;
+                    const a = i * step - Math.PI / 2;
+                    ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+                }
+                ctx.closePath();
+                ctx.stroke();
+
+                // Merkez halka
+                ctx.beginPath();
+                ctx.arc(0, 0, radius * 0.3, 0, Math.PI * 2);
+                ctx.stroke();
+
+                ctx.shadowBlur = 0;
+                ctx.restore();
+            }
+
+            // Piston hareketi
+            let pistonPhase = 0;
+
+            function drawPiston(cx, cy, width, height, phase) {
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.strokeStyle = 'rgba(255, 215, 0, 0.6)';
+                ctx.lineWidth = 3;
+                ctx.shadowColor = '#FFD700';
+                ctx.shadowBlur = 12;
+
+                // Silindir
+                ctx.strokeRect(-width / 2, -height / 2, width, height);
+
+                // Piston kafası
+                const pistonY = -height / 2 + (Math.sin(phase) + 1) * (height / 2 - 10);
+                ctx.fillStyle = 'rgba(255, 200, 0, 0.7)';
+                ctx.fillRect(-width / 2 + 3, pistonY - 8, width - 6, 16);
+
+                // Piston kolu
+                ctx.beginPath();
+                ctx.moveTo(0, pistonY + 8);
+                ctx.lineTo(0, height / 2);
+                ctx.strokeStyle = '#FFA500';
+                ctx.stroke();
+
+                ctx.shadowBlur = 0;
+                ctx.restore();
+            }
+
+            function drawGarageAnimation() {
+                ctx.clearRect(0, 0, w, h);
+
+                // Partikülleri güncelle ve çiz
+                particles.forEach(p => {
+                    p.update();
+                    p.draw(ctx);
+                });
+
+                const cx = w / 2;
+                const cy = h / 2;
+
+                // Dönen çarklar
+                const gear1Y = cy - 80;
+                const gear2X = cx + 120;
+                const gear2Y = cy + 40;
+
+                gearAngle += 0.015;
+                drawGear(cx, gear1Y, 70, 12, gearAngle, '#FFD700');
+                drawGear(gear2X, gear2Y, 55, 8, -gearAngle * 0.8, '#FFA500');
+
+                // Küçük çark
+                drawGear(cx - 150, cy + 60, 45, 10, gearAngle * 1.2, '#FFFF00');
+
+                // Pistonlar
+                pistonPhase += 0.03;
+                const piston1X = cx - 200;
+                const piston2X = cx + 200;
+                const pistonY = cy - 30;
+                drawPiston(piston1X, pistonY, 40, 140, pistonPhase);
+                drawPiston(piston2X, pistonY, 40, 140, pistonPhase + Math.PI);
+
+                // Motor bloğu ortasına parlayan çekirdek
+                const pulse = Math.sin(Date.now() * 0.005) * 0.3 + 0.7;
+                ctx.beginPath();
+                ctx.arc(cx, cy, 25 * pulse, 0, Math.PI * 2);
+                const gradient = ctx.createRadialGradient(cx, cy, 5, cx, cy, 35);
                 gradient.addColorStop(0, '#FFFF00');
-                gradient.addColorStop(1, '#FFA500');
+                gradient.addColorStop(0.7, '#FFD700');
+                gradient.addColorStop(1, 'transparent');
                 ctx.fillStyle = gradient;
-                ctx.fill();
                 ctx.shadowColor = '#FFFF00';
-                ctx.shadowBlur = 25;
+                ctx.shadowBlur = 35;
                 ctx.fill();
                 ctx.shadowBlur = 0;
-                // Yörüngeler
-                const orbits = [80, 120, 160];
-                const angles = [angle1, angle2, angle3];
-                const colors = ['#FFD700', '#FFA500', '#FFFF00'];
-                orbits.forEach((r, i) => {
-                    ctx.beginPath();
-                    ctx.ellipse(cx, cy, r, r * 0.4, 0, 0, Math.PI * 2);
-                    ctx.strokeStyle = 'rgba(255,215,0,0.15)';
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
-                    const ex = cx + r * Math.cos(angles[i]);
-                    const ey = cy + r * 0.4 * Math.sin(angles[i]);
-                    ctx.beginPath();
-                    ctx.arc(ex, ey, 6, 0, Math.PI * 2);
-                    ctx.fillStyle = colors[i];
-                    ctx.shadowColor = colors[i];
-                    ctx.shadowBlur = 15;
-                    ctx.fill();
-                    ctx.shadowBlur = 0;
-                });
-                angle1 += 0.02;
-                angle2 += 0.015;
-                angle3 += 0.025;
-                requestAnimationFrame(drawAtom);
+
+                // Bağlantı çizgileri
+                ctx.strokeStyle = 'rgba(255, 215, 0, 0.2)';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([5, 10]);
+                ctx.beginPath();
+                ctx.moveTo(cx, gear1Y + 70);
+                ctx.lineTo(cx, cy - 25);
+                ctx.moveTo(gear2X - 55, gear2Y);
+                ctx.lineTo(cx + 25, cy);
+                ctx.moveTo(cx - 150 + 45, cy + 60);
+                ctx.lineTo(cx - 25, cy);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                requestAnimationFrame(drawGarageAnimation);
             }
-            drawAtom();
+            drawGarageAnimation();
 
             // Gallery filter
             const filterBtns = document.querySelectorAll('.filter-btn');
@@ -1289,21 +1393,18 @@
                 });
             });
 
-            // Form submit
             document.getElementById('contactForm').addEventListener('submit', (e) => {
                 e.preventDefault();
                 alert('Mesajınız alındı! En kısa sürede dönüş yapacağız. (Kurumsal API simülasyonu)');
                 e.target.reset();
             });
 
-            // FAB
             const fabContainer = document.getElementById('fab-container');
             const fabMain = document.getElementById('fab-main');
             fabMain.addEventListener('click', () => {
                 fabContainer.classList.toggle('active');
             });
 
-            // Leaflet Map (Canlı Harita)
             const map = L.map('map').setView([41.0082, 28.9784], 15);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap contributors',
@@ -1320,7 +1421,6 @@
                 }
             });
 
-            // Smooth scroll for nav links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function(e) {
                     e.preventDefault();
